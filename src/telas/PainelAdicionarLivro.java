@@ -3,33 +3,49 @@ package telas;
 import java.awt.Font;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.table.DefaultTableModel;
 
+import controle.*;
+import modelos.*;
+import net.proteanit.sql.DbUtils;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+@SuppressWarnings("serial")
 public class PainelAdicionarLivro extends JPanel {
-	private JTextField textField;
-	private JTextField txtPesquisaAutor;
-	private JTextField txtNomeAutor;
-	private JTable tableAutor;
-	private JTextField txtPesquisaEditora;
-	private JTextField txtEditora;
-	private JTable tableEditora;
-	private JButton btnSelecionar, btnAddAutor, btnSelecionarEditora, btnAddEditora;
+	private JTextField txtNomeLivro;
+	private JTable tblAutor, tableEditora;
+	private JButton btnSelecionarEditora;
 	
-	/**
-	 * Create the panel.
-	 */
+	ModeloAutor modAutor = new ModeloAutor();
+	ControleAutor controleAutor = new ControleAutor();
+	
+	ModeloEditora modEditora = new ModeloEditora();
+	ControleEditora controleEditora = new ControleEditora();
+	
+	
+	
+	ConexaoBD conexao = new ConexaoBD();
+	
 	public PainelAdicionarLivro() {
 		setSize(1000, 700);
 		setLayout(null);
+		
+		
 		
 		JLabel lblAddLivro = new JLabel("Cadastrar novo livro");
 		lblAddLivro.setFont(new Font("Tahoma", Font.PLAIN, 30));
@@ -41,88 +57,34 @@ public class PainelAdicionarLivro extends JPanel {
 		lblNewLabel.setBounds(41, 92, 118, 19);
 		add(lblNewLabel);
 		
-		textField = new JTextField();
-		textField.setBounds(142, 93, 383, 20);
-		add(textField);
-		textField.setColumns(10);
+		txtNomeLivro = new JTextField();
+		txtNomeLivro.setBounds(142, 93, 383, 20);
+		add(txtNomeLivro);
+		txtNomeLivro.setColumns(10);
 		
-		JRadioButton rdbtnSelecionarAutor = new JRadioButton("Selecionar autores j\u00E1 cadastrados");
-		rdbtnSelecionarAutor.setSelected(true);
-		rdbtnSelecionarAutor.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				ativarSelecionar(true);
-				ativarAdd(false);
-			}
-		});
-		rdbtnSelecionarAutor.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		rdbtnSelecionarAutor.setBounds(41, 130, 214, 23);
-		add(rdbtnSelecionarAutor);
 		
-		JRadioButton rdbtnAdicionarNovoAutor = new JRadioButton("Adicionar novo autor");
-		rdbtnAdicionarNovoAutor.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				ativarAdd(true);
-				ativarSelecionar(false);
-			}
-		});
-		rdbtnAdicionarNovoAutor.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		rdbtnAdicionarNovoAutor.setBounds(580, 130, 214, 23);
-		add(rdbtnAdicionarNovoAutor);
 		
-		ButtonGroup bgAutores = new ButtonGroup();
-		bgAutores.add(rdbtnSelecionarAutor);
-		bgAutores.add(rdbtnAdicionarNovoAutor);
 		
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setEnabled(false);
-		scrollPane.setBounds(41, 190, 484, 108);
+		scrollPane.setBounds(41, 166, 484, 108);
 		add(scrollPane);
 		
-		tableAutor = new JTable();
-		tableAutor.setEnabled(false);
-		tableAutor.setModel(new DefaultTableModel(
+		tblAutor = new JTable();
+		tblAutor.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
 				"ID", "Autor"
 			}
 		));
-		scrollPane.setViewportView(tableAutor);
+		scrollPane.setViewportView(tblAutor);
 		
-		JLabel lblPesquisarAutor = new JLabel("Pesquisar autor:");
+		JLabel lblPesquisarAutor = new JLabel("Selecionar autores:");
 		lblPesquisarAutor.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblPesquisarAutor.setBounds(41, 160, 118, 19);
+		lblPesquisarAutor.setBounds(41, 136, 149, 19);
 		add(lblPesquisarAutor);
-		
-		txtPesquisaAutor = new JTextField();
-		txtPesquisaAutor.setColumns(10);
-		txtPesquisaAutor.setBounds(152, 161, 374, 20);
-		add(txtPesquisaAutor);
-		
-		JLabel lblNomeDoAutor = new JLabel("Nome do autor:");
-		lblNomeDoAutor.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNomeDoAutor.setBounds(580, 160, 118, 19);
-		add(lblNomeDoAutor);
-		
-		txtNomeAutor = new JTextField();
-		txtNomeAutor.setEnabled(false);
-		txtNomeAutor.setColumns(10);
-		txtNomeAutor.setBounds(580, 190, 374, 20);
-		add(txtNomeAutor);
-		
-		btnAddAutor = new JButton("Adicionar");
-		btnAddAutor.setEnabled(false);
-		btnAddAutor.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnAddAutor.setBounds(580, 221, 214, 23);
-		add(btnAddAutor);
-		
-		btnSelecionar = new JButton("Selecionar");
-		btnSelecionar.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnSelecionar.setBounds(41, 309, 228, 23);
-		add(btnSelecionar);
 		
 		btnSelecionarEditora = new JButton("Selecionar");
 		btnSelecionarEditora.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -130,7 +92,7 @@ public class PainelAdicionarLivro extends JPanel {
 		add(btnSelecionarEditora);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(41, 434, 484, 108);
+		scrollPane_1.setBounds(41, 340, 484, 108);
 		add(scrollPane_1);
 		
 		tableEditora = new JTable();
@@ -143,61 +105,10 @@ public class PainelAdicionarLivro extends JPanel {
 		));
 		scrollPane_1.setViewportView(tableEditora);
 		
-		txtPesquisaEditora = new JTextField();
-		txtPesquisaEditora.setColumns(10);
-		txtPesquisaEditora.setBounds(164, 405, 362, 20);
-		add(txtPesquisaEditora);
-		
-		JLabel lblPesquisarEditora = new JLabel("Pesquisar editora:");
-		lblPesquisarEditora.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblPesquisarEditora.setBounds(41, 404, 118, 19);
-		add(lblPesquisarEditora);
-		
-		JRadioButton rbtnSelecionarEditora = new JRadioButton("Selecionar editora j\u00E1 cadastrada");
-		rbtnSelecionarEditora.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				ativarSelecionarEditora(true);
-				ativarAddEditora(false);
-			}
-		});
-		rbtnSelecionarEditora.setSelected(true);
-		rbtnSelecionarEditora.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		rbtnSelecionarEditora.setBounds(41, 374, 214, 23);
-		add(rbtnSelecionarEditora);
-		
-		JRadioButton rdbtnAdcionarNovaEditora = new JRadioButton("Adcionar nova editora");
-		rdbtnAdcionarNovaEditora.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				ativarAddEditora(true);
-				ativarSelecionarEditora(false);
-			}
-		});
-		rdbtnAdcionarNovaEditora.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		rdbtnAdcionarNovaEditora.setBounds(580, 374, 214, 23);
-		add(rdbtnAdcionarNovaEditora);
-		
-		ButtonGroup bgEditora = new ButtonGroup();
-		bgEditora.add(rbtnSelecionarEditora);
-		bgEditora.add(rdbtnAdcionarNovaEditora);
-		
-		JLabel lblNomeDaEditora = new JLabel("Nome da editora:");
-		lblNomeDaEditora.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNomeDaEditora.setBounds(580, 404, 133, 19);
-		add(lblNomeDaEditora);
-		
-		txtEditora = new JTextField();
-		txtEditora.setEnabled(false);
-		txtEditora.setColumns(10);
-		txtEditora.setBounds(580, 434, 374, 20);
-		add(txtEditora);
-		
-		btnAddEditora = new JButton("Adicionar");
-		btnAddEditora.setEnabled(false);
-		btnAddEditora.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnAddEditora.setBounds(580, 465, 214, 23);
-		add(btnAddEditora);
+		JLabel lblSelecionarEditora = new JLabel("Selecionar editora:");
+		lblSelecionarEditora.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblSelecionarEditora.setBounds(41, 310, 118, 19);
+		add(lblSelecionarEditora);
 		
 		JButton btnNewButton_1 = new JButton("Cadastrar livro");
 		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -205,30 +116,100 @@ public class PainelAdicionarLivro extends JPanel {
 		add(btnNewButton_1);
 		
 		JButton btnVoltar = new JButton("Voltar");
+		btnVoltar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ControleTelas controleTelas = new ControleTelas();
+				controleTelas.definirTela("painelLivros");
+			}
+		});
 		btnVoltar.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		btnVoltar.setBounds(787, 617, 167, 23);
 		add(btnVoltar);
+		
+		JButton btnPesquisar = new JButton("Pesquisar");
+		btnPesquisar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//fillJTableAutor("SELECT FROM AUTORES WHERE ");
+			}
+		});
+		btnPesquisar.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnPesquisar.setBounds(549, 75, 164, 23);
+		add(btnPesquisar);
+		
+		JButton btnPesquisarPorNome = new JButton("Pesquisar por nome");
+		btnPesquisarPorNome.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				String strAutor = JOptionPane.showInputDialog(null, "Nome do autor:", "Pesquisar autor por nome", JOptionPane.INFORMATION_MESSAGE);
+				
+				
+				if((strAutor != null) && (strAutor.length() > 0)) {
+					preencherTabelaAutor(strAutor, 1);
+				}
+				else {
+					preencherTabelaAutor("", 0);
+				}
+			}
+		});
+		btnPesquisarPorNome.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnPesquisarPorNome.setBounds(549, 166, 247, 23);
+		add(btnPesquisarPorNome);
+		
+		JButton btnGerenciarAutores = new JButton("Gerenciar registro de autores");
+		btnGerenciarAutores.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnGerenciarAutores.setBounds(549, 224, 247, 23);
+		add(btnGerenciarAutores);
+		
+		JButton btnAdicionarAutorSelecionado = new JButton("Adicionar autor selecionado");
+		btnAdicionarAutorSelecionado.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnAdicionarAutorSelecionado.setBounds(549, 251, 247, 23);
+		add(btnAdicionarAutorSelecionado);
+		
+		JButton btnPesquisarEditora = new JButton("Pesquisar por nome");
+		btnPesquisarEditora.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnPesquisarEditora.setBounds(549, 359, 247, 23);
+		add(btnPesquisarEditora);
+		
+		JButton btnGerenciarRegistroDe = new JButton("Gerenciar registro de editoras");
+		btnGerenciarRegistroDe.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnGerenciarRegistroDe.setBounds(549, 387, 247, 23);
+		add(btnGerenciarRegistroDe);
+		
+		JButton btnAdicionarEditoraSelecionada = new JButton("Adicionar editora selecionada");
+		btnAdicionarEditoraSelecionada.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnAdicionarEditoraSelecionada.setBounds(549, 414, 247, 23);
+		add(btnAdicionarEditoraSelecionada);
+		
+		JButton btnAtualizarTabela = new JButton("Atualizar tabela");
+		btnAtualizarTabela.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				preencherTabelaAutor("", 0);
+			}
+		});
+		btnAtualizarTabela.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnAtualizarTabela.setBounds(549, 190, 247, 23);
+		add(btnAtualizarTabela);
+		
+		preencherTabelaAutor("", 0);
 	}
 	
-	private void ativarSelecionar(boolean valor) {
-		txtPesquisaAutor.setEnabled(valor);
-		btnSelecionar.setEnabled(valor);
-		tableAutor.setEnabled(valor);
-	}
 	
-	private void ativarAdd(boolean valor) {
-		txtNomeAutor.setEnabled(valor);
-		btnAddAutor.setEnabled(valor);
-	}
-	
-	private void ativarSelecionarEditora(boolean valor) {
-		txtPesquisaEditora.setEnabled(valor);
-		tableEditora.setEnabled(valor);
-		btnSelecionarEditora.setEnabled(valor);
-	}
-	
-	private void ativarAddEditora(boolean valor) {
-		txtEditora.setEnabled(valor);
-		btnAddEditora.setEnabled(valor);
-	}
+	public void preencherTabelaAutor(String nome, int tipo) {
+		
+		// 0 <- CONSULTAR TODOS OS AUTORES
+		// 1 <- CONSULTA POR AUTOR ESPECIFICO
+		
+		DefaultTableModel modeloTabela = (DefaultTableModel) tblAutor.getModel();
+		modeloTabela.setNumRows(0);
+		
+		controleAutor = new ControleAutor();
+		
+		for(ModeloAutor autor: controleAutor.consultar(nome, tipo)) {
+			
+			modeloTabela.addRow(new Object[] {
+					autor.getIdAutor(),
+					autor.getNomeAutor()
+			});
+		}
+	}	
 }

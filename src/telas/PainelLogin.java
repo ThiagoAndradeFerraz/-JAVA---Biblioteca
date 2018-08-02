@@ -5,6 +5,7 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
 
+import controle.ConexaoBD;
 import controle.ControleTelas;
 
 import javax.swing.JButton;
@@ -15,14 +16,16 @@ import java.awt.event.ActionEvent;
 public class PainelLogin extends JPanel {
 	private JTextField txtUsuario;
 	private JTextField txtSenha;
+	
+	ConexaoBD conectarBD = new ConexaoBD();
 
 	public int x, y;
 	
 	public PainelLogin() {
-		setLayout(null);
 		
-		x = 518;
-		y = 234;
+		conectarBD.conectar();
+		
+		setLayout(null);
 		
 		JLabel lblLogin = new JLabel("Login");
 		lblLogin.setFont(new Font("Tahoma", Font.PLAIN, 30));
@@ -52,6 +55,7 @@ public class PainelLogin extends JPanel {
 		JButton btnEntrar = new JButton("Entrar");
 		btnEntrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
 				ControleTelas controleTelas = new ControleTelas();
 				controleTelas.definirTela("painelMenu");
 			}

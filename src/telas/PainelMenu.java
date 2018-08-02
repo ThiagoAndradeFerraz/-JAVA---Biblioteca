@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+@SuppressWarnings("serial")
 public class PainelMenu extends JPanel {
 	
 	public PainelMenu() {
@@ -59,6 +60,11 @@ public class PainelMenu extends JPanel {
 		add(btnMudarSenha);
 		
 		JButton btnSair = new JButton("Sair");
+		btnSair.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);
+			}
+		});
 		btnSair.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		btnSair.setBounds(65, 529, 187, 23);
 		add(btnSair);
@@ -68,5 +74,4 @@ public class PainelMenu extends JPanel {
 		lblConfig.setBounds(65, 381, 139, 25);
 		add(lblConfig);
 	}
-
 }

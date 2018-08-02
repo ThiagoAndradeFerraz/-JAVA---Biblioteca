@@ -15,10 +15,10 @@ public class FramePrincipal extends JFrame{
 	private PainelMenu painelMenu = new PainelMenu();
 	private PainelLivros painelLivros = new PainelLivros();
 	private PainelAdicionarLivro painelAddLivro = new PainelAdicionarLivro();
+	private PainelEmprestimo painelEmprestimo = new PainelEmprestimo();
 	
 	public FramePrincipal() {
 		super("Biblioteca");
-		
 		
 		painelConteudo.setLayout(cardLayout);
 		
@@ -26,13 +26,11 @@ public class FramePrincipal extends JFrame{
 		painelConteudo.add(painelMenu, "painelMenu");
 		painelConteudo.add(painelLivros, "painelLivros");
 		painelConteudo.add(painelAddLivro, "painelAddLivro");
+		painelConteudo.add(painelEmprestimo, "painelEmprestimo");
 		
 		this.setContentPane(painelConteudo);
 		cardLayout.show(painelConteudo, "painelLogin");
 		
 		
-	}
-	
-	
-	
+	}	
 }
